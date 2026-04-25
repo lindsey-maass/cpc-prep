@@ -1,22 +1,24 @@
 // Shared header, nav, and footer for all pages
-// Usage: call renderHeader(activePage) after DOMContentLoaded
 
 const PAGES = {
   home: { label: 'Home', href: 'index.html' },
-  integumentary: { label: 'Integumentary', href: 'cheat-integumentary.html' },
-  musculoskeletal: { label: 'Musculoskeletal', href: 'cheat-musculoskeletal.html' },
-  respiratory: { label: 'Respiratory', href: 'cheat-respiratory.html' },
-  cardiovascular: { label: 'Cardiovascular', href: 'cheat-cardiovascular.html' },
-  digestive: { label: 'Digestive', href: 'cheat-digestive.html' },
-  urinary: { label: 'Urinary', href: 'cheat-urinary.html' },
-  radiology: { label: 'Radiology', href: 'cheat-radiology.html' },
-  week1: { label: 'Week 1', href: 'week-1.html' },
-  week2: { label: 'Week 2', href: 'week-2.html' },
-  week3: { label: 'Week 3', href: 'week-3.html' },
-  week4: { label: 'Week 4', href: 'week-4.html' },
-  week5: { label: 'Week 5', href: 'week-5.html' },
-  week6: { label: 'Week 6', href: 'week-6.html' },
+  integumentary: { label: 'Integumentary System (10000s)', href: 'cheat-integumentary.html' },
+  musculoskeletal: { label: 'Musculoskeletal System (20000s)', href: 'cheat-musculoskeletal.html' },
+  respiratory: { label: 'Respiratory / Hemic / Lymphatic (30000s)', href: 'cheat-respiratory.html' },
+  cardiovascular: { label: 'Cardiovascular System (33000s)', href: 'cheat-cardiovascular.html' },
+  digestive: { label: 'Digestive System (40000s)', href: 'cheat-digestive.html' },
+  urinary: { label: 'Urinary System (50000s)', href: 'cheat-urinary.html' },
+  radiology: { label: 'Radiology (70000s)', href: 'cheat-radiology.html' },
+  week1: { label: 'Part 1: AAPC Membership', href: 'week-1.html' },
+  week2: { label: 'Part 2: Exam Format', href: 'week-2.html' },
+  week3: { label: 'Part 3: Registration', href: 'week-3.html' },
+  week4: { label: 'Part 4: Study Strategies', href: 'week-4.html' },
+  week5: { label: 'Part 5: Exam Day', href: 'week-5.html' },
+  week6: { label: 'Part 6: After the Exam', href: 'week-6.html' },
 };
+
+const CHEAT_SHEETS = ['integumentary','musculoskeletal','respiratory','cardiovascular','digestive','urinary','radiology'];
+const WEEKS = ['week1','week2','week3','week4','week5','week6'];
 
 function renderSite(activePage) {
   renderHeader();
@@ -54,23 +56,33 @@ function renderNav(activePage) {
   const el = document.getElementById('site-nav');
   if (!el) return;
 
-  const cheatSheets = ['integumentary','musculoskeletal','respiratory','cardiovascular','digestive','urinary','radiology'];
-  const weeks = ['week1','week2','week3','week4','week5','week6'];
+  const csActive = CHEAT_SHEETS.includes(activePage);
+  const wkActive = WEEKS.includes(activePage);
 
-  let html = '<div class="inner">';
-  html += `<a href="index.html" class="${activePage==='home'?'active':''}">Home</a>`;
-  html += '<div class="nav-divider"></div>';
-  html += '<span style="font-family:var(--font-head);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;padding:13px 10px 13px 16px;display:block;">Cheat Sheets:</span>';
-  cheatSheets.forEach(p => {
-    html += `<a href="${PAGES[p].href}" class="${activePage===p?'active':''}">${PAGES[p].label}</a>`;
-  });
-  html += '<div class="nav-divider"></div>';
-  html += '<span style="font-family:var(--font-head);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;padding:13px 10px 13px 16px;display:block;">Exam Prep Series:</span>';
-  weeks.forEach(p => {
-    html += `<a href="${PAGES[p].href}" class="${activePage===p?'active':''}">${PAGES[p].label}</a>`;
-  });
-  html += '</div>';
-  el.innerHTML = html;
+  const csItems = CHEAT_SHEETS.map(p =>
+    `<a href="${PAGES[p].href}" class="dropdown-item ${activePage===p?'active':''}">${PAGES[p].label}</a>`
+  ).join('');
+
+  const wkItems = WEEKS.map(p =>
+    `<a href="${PAGES[p].href}" class="dropdown-item ${activePage===p?'active':''}">${PAGES[p].label}</a>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="inner">
+      <a href="index.html" class="nav-link ${activePage==='home'?'active':''}">Home</a>
+      <div class="nav-dropdown">
+        <a class="nav-link dropdown-toggle ${csActive?'active':''}" href="#">
+          CPT Cheat Sheets <span class="caret">&#9660;</span>
+        </a>
+        <div class="dropdown-menu">${csItems}</div>
+      </div>
+      <div class="nav-dropdown">
+        <a class="nav-link dropdown-toggle ${wkActive?'active':''}" href="#">
+          Exam Prep Series <span class="caret">&#9660;</span>
+        </a>
+        <div class="dropdown-menu">${wkItems}</div>
+      </div>
+    </div>`;
 }
 
 function renderFooter() {
